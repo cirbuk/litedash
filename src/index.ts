@@ -274,3 +274,35 @@ export const bindFunctions = (funcs: { [index: string]: Function }, bindBefore: 
     return acc;
   }, {});
 };
+
+/**
+ *  - If provided an array of promises, returns a promise that resolves when all the promises in the array has resolved.
+ *  The returned promise will resolve with an array of results with the result in index i corresponding to promise i in
+ *  the input array
+ *  - If provided a map of promises, returns a promise that resolves when all the promises in the object has resolved.
+ *  The returned promise will resolve with a map of results with the result in key i corresponding to promise at the key
+ *  i in the input object
+ *  - If anything else is provided, the input value is returned as such
+ * @param promises: array or promises or map of promises or a single promise
+ */
+export const resolvePromises = (promises: any) => {
+  if(Array.isArray(promises)) {
+    return Promise.all(promises);
+  } else if(isPlainObject(promises)) {
+    const keys: string[] = Object.keys(promises);
+    const promiseArr: Promise<any>[] = [];
+    const keyMap: { [index: number]: string } = keys.reduce((acc: { [index: number]: string }, key: string, index: number) => {
+      acc[index] = key;
+      promiseArr.push(promises[key]);
+      return acc;
+    }, {});
+    return Promise.all(promiseArr)
+      .then(respArr => {
+        return respArr.reduce((acc: { [index: string]: any }, resp, index) => {
+          acc[keyMap[index]] = resp;
+          return acc;
+        }, {});
+      });
+  }
+  return promises;
+};
