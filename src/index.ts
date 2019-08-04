@@ -47,7 +47,7 @@ export const isObjectLike = (val: any) => typeof val === "object" && val !== nul
  */
 export const isObject = (val: any) => {
   const type = typeof val;
-  return val !== null && (type === "object" || isFunction(type));
+  return val !== null && (type === "object" || isFunction(val));
 };
 
 /**
@@ -198,14 +198,21 @@ export const throttle = (func: Function, wait: number, options: { leading?: bool
  * @param func
  * @returns object
  */
-export const mapValues = (obj: { [index: string]: any }, func: Function) =>
-  Object.keys(obj).reduce((results: { [index: string]: any }, key) => {
+export const mapValues = (obj: { [index: string]: any }, func: Function) => {
+  let keys;
+  try {
+    keys = Object.keys(obj);
+  } catch(ex) {
+    throw new Error("Unable to extract keys from provided object");
+  }
+  return keys.reduce((results: { [index: string]: any }, key) => {
     const value = func(obj[key], key);
     if(!isUndefined(value)) {
       results[key] = value;
     }
     return results;
   }, {});
+};
 
 /**
  * Capitalizes the string passed
@@ -251,13 +258,19 @@ const getBindings = (bindings: any[] = []) =>
  * @param bindAfter
  * @returns object with bound functions
  */
-export const bindFunctions = (funcs: { [index: string]: Function }, bindBefore: any[], bindAfter: any[]) =>
-  Object.keys(funcs)
-    .reduce((acc: { [index: string]: any }, key: string) => {
-      acc[key] = (...args: any[]) => {
-        const beforeArgs = getBindings(bindBefore);
-        const afterArgs = getBindings(bindAfter);
-        return funcs[key](...beforeArgs, ...args, ...afterArgs);
-      };
-      return acc;
-    }, {});
+export const bindFunctions = (funcs: { [index: string]: Function }, bindBefore: any[], bindAfter: any[]) => {
+  let keys;
+  try {
+    keys = Object.keys(funcs);
+  } catch(ex) {
+    throw new Error("Unable to extract keys from provided object");
+  }
+  return keys.reduce((acc: { [index: string]: any }, key: string) => {
+    acc[key] = (...args: any[]) => {
+      const beforeArgs = getBindings(bindBefore);
+      const afterArgs = getBindings(bindAfter);
+      return funcs[key](...beforeArgs, ...args, ...afterArgs);
+    };
+    return acc;
+  }, {});
+};
