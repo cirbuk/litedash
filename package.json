@@ -7,8 +7,6 @@
   "browser": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "prepare": "npm run build",
-    "prepack": "cp -r dist $RELEASE_DIR/dist && cp README.md $RELEASE_DIR && DIR=$RELEASE_DIR node scripts/prepare.js",
     "build": "rollup -c",
     "test": "jest"
   },
