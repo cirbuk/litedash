@@ -44,7 +44,6 @@ jobs:
       - run:
           name: Setup release directory
           command: |
-            npm install -g typescript
             rm -rf $RELEASE_DIR
             mkdir $RELEASE_DIR
             npm run build
