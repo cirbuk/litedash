@@ -48,10 +48,10 @@ jobs:
             mkdir "$RELEASE_DIR"
       - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/litedash/$RELEASE_DIR/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/litedash/.npmrc
       - run:
           name: Publish package
-          command: "PUBLISH_DIR=${RELEASE_DIR} npm publish ./${PUBLISH_DIR}"
+          command: "PUBLISH_DIR=${RELEASE_DIR} npm publish ./${RELEASE_DIR}"
 
 workflows:
   version: 2
