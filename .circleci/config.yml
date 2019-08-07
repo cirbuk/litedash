@@ -21,7 +21,9 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: yarn install
+      - run:
+          name: Installing packages
+          command: yarn install
       - run:
           name: Run tests
           command: npm test
