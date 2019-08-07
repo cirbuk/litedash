@@ -44,8 +44,8 @@ jobs:
       - run:
           name: Setup release directory
           command: |
-            rm -rf $RELEASE_DIR
-            mkdir $RELEASE_DIR
+            rm -rf "$RELEASE_DIR"
+            mkdir "$RELEASE_DIR"
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > "~/litedash/$RELEASE_DIR/.npmrc"
