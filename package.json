@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
-    "prepublishOnly": "rm -rf _publish && mkdir _publish && cp -r dist _publish/dist && cp README.md _publish && node scripts/prepare.js && cd _publish",
+    "prepublishOnly": "rm -rf $PUBLISH_DIR && mkdir $PUBLISH_DIR && cp -r dist $PUBLISH_DIR/dist && cp README.md $PUBLISH_DIR && DIR=$PUBLISH_DIR node scripts/prepare.js",
     "build": "rollup -c",
     "test": "jest"
   },

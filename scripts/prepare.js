@@ -4,4 +4,4 @@ const fs = require("fs");
 delete pkg.devDependencies;
 delete pkg.scripts;
 
-fs.writeFileSync("_publish/package.json", JSON.stringify(pkg));
+fs.writeFileSync(process.env.DIR + "/package.json", JSON.stringify(pkg));

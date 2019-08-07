@@ -46,7 +46,7 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/litedash/.npmrc
       - run:
           name: Publish package
-          command: npm publish
+          command: PUBLISH_DIR=_release_ npm publish ./_release_
 
 workflows:
   version: 2
