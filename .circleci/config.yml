@@ -42,11 +42,16 @@ jobs:
       - attach_workspace:
           at: ~/litedash
       - run:
+          name: Setup release directory
+          command: |
+            rm -rf $RELEASE_DIR
+            mkdir $RELEASE_DIR
+      - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/litedash/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > "~/litedash/$RELEASE_DIR/.npmrc"
       - run:
           name: Publish package
-          command: PUBLISH_DIR=_release_ npm publish "${PUBLISH_DIR}"
+          command: "PUBLISH_DIR=$RELEASE_DIR npm publish ${PUBLISH_DIR}"
 
 workflows:
   version: 2
