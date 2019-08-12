@@ -44,18 +44,18 @@ jobs:
       - run:
           name: Setup release directory
           command: |
-            rm -rf $RELEASE_DIR
-            mkdir $RELEASE_DIR
+            rm -rf __release__
+            mkdir __release__
             npm run build
-            cp -r dist $RELEASE_DIR/dist
-            cp README.md $RELEASE_DIR
-            DIR=$RELEASE_DIR node scripts/prepare.js
+            cp -r dist __release__/dist
+            cp README.md __release__
+            DIR=__release__ node scripts/prepare.js
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/litedash/.npmrc
       - run:
           name: Publish package
-          command: "npm publish ./${RELEASE_DIR}"
+          command: "npm publish ./__release__ --access public"
 
 workflows:
   version: 2
