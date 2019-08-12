@@ -1,4 +1,4 @@
 node_modules
 dist
-_publish
+__release__
 .rpt2_cache
