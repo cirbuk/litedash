@@ -76,7 +76,7 @@ export const isPlainObject = (val: any) => {
  * @param defaultValue
  * @returns value from the "object" in the "path". If the value there is found to be undefined, the "defaultValue"(is any) is returned
  */
-export const get = (object: object, path: string | string[] = "", defaultValue: any) => {
+export const get = (object: object, path: string | string[] = "", defaultValue?: any) => {
   let result: { [index: string]: any } = object;
   if(path && path.length > 0) {
     if(!Array.isArray(path)) {
