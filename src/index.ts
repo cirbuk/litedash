@@ -306,3 +306,27 @@ export const resolvePromises = (promises: any) => {
   }
   return promises;
 };
+
+/**
+ * Returns a function that invokes the given series of functions whose output is subsequently passed to the next
+ * function in the series.
+ * @param functions: Array of functions that constitute the pipeline
+ * @param initialState: If the pipeline is called with no parameters, this value will be taken as the starting value
+ * for the first function in the pipeline
+ */
+export const pipeline = (functions: Array<Function> = [], initialState?: any): Function => (state: any = initialState): any => functions.reduce((state, fn) => fn(state), state);
+
+/**
+ * Value of every key in obj is passed to the function. If the function returns true, the resultant object will have that key
+ * and its value, otherwise it is omitted in the returned object
+ * @param obj
+ * @param func
+ */
+export const filterObject = (obj: { [index: string]: any }, func: Function) =>
+  Object.keys(obj).reduce((results: { [index: string]: any }, key) => {
+    const shouldKeep = func(obj[key], key);
+    if(shouldKeep === true) {
+      results[key] = obj[key];
+    }
+    return results;
+  }, {});
