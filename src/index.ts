@@ -354,11 +354,17 @@ export const filterObject = (obj: AnyObject, func: AnyFunction): AnyObject =>
 // @ts-ignore
 export const isNumber = (n: unknown): boolean => (typeof n === "number" || isValidString(n)) && Number.isFinite(+n);
 
-export const getAsNumbers = (object: AnyObject, paths: string | string[] = [], defaults = []): undefined | number | unknown[] => {
+export const getAsNumbers = (object: AnyObject, paths: string | string[] = [], defaults = []): unknown | number | unknown[] => {
   const parsedDefaults = !isUndefined(defaults) ? defaults : Array.isArray(paths) ? [] : undefined;
   const getValue = (path: string, index = 0) => {
     const value = get(object, path);
-    return isUndefined(value) || !isNumber(value) ? (!Array.isArray(parsedDefaults) ? parsedDefaults : parsedDefaults[index]) : +(value as number);
+    if (isUndefined(value)) {
+      return !Array.isArray(parsedDefaults) ? parsedDefaults : parsedDefaults[index];
+    }
+    if (!isNumber(value)) {
+      return value;
+    }
+    return +(value as number);
   };
   if (isString(paths)) {
     return getValue(paths as string);
