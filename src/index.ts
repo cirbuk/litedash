@@ -6,7 +6,9 @@ type AnyObject = { [index: string]: unknown };
  * @param val
  * @returns true if val is null, false otherwise
  */
-export const isNull = (val: unknown): boolean => val === null;
+export function isNull<T>(val: T | null): val is null {
+  return val === null;
+}
 
 /**
  * Checks if the passed value is undefined
