@@ -58,7 +58,7 @@ export const isValidString = (val: unknown): boolean => {
  * @param val
  * @returns true if val is non-null of type object, false otherwise
  */
-export const isObjectLike = (val: unknown): boolean => typeof val === "object" && val !== null;
+export const isObjectLike = (val: unknown): boolean => typeof val === "object" && !isNull(val);
 
 /**
  * Checks if value is the language type of Object. (e.g. arrays, functions, objects, regexes, new Number(0), and new String(''))
@@ -66,8 +66,7 @@ export const isObjectLike = (val: unknown): boolean => typeof val === "object" &
  * @returns true if val is non-null of type object or function, false otherwise
  */
 export const isObject = (val: unknown): boolean => {
-  const type = typeof val;
-  return val !== null && (type === "object" || isFunction(val));
+  return !isNull(val) && (typeof val === "object" || isFunction(val));
 };
 
 /**
