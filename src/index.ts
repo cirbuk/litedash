@@ -15,7 +15,9 @@ export function isNull<T>(val: T | null): val is null {
  * @param val
  * @returns true if val is undefined, false otherwise
  */
-export const isUndefined = (val: unknown): boolean => typeof val === "undefined";
+export function isUndefined<T>(val: T | undefined): val is undefined {
+  return typeof val === "undefined";
+}
 
 /**
  * Checks if the passed value is a function
