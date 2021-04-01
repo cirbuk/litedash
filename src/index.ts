@@ -293,13 +293,14 @@ const getBindings = (bindings: unknown[] = []) =>
  * @returns object with bound functions
  */
 export const bindFunctions = (funcs: { [index: string]: AnyFunction }, bindBefore: unknown[], bindAfter: unknown[]): { [index: string]: AnyFunction } => {
-  let keys;
+  let keys: string[];
   try {
     keys = Object.keys(funcs);
   } catch (ex) {
     throw new Error("Unable to extract keys from provided object");
   }
-  return keys.reduce((acc: AnyObject, key: string) => {
+
+  return keys.reduce<{ [index: string]: AnyFunction }>((acc, key) => {
     acc[key] = (...args: unknown[]) => {
       const beforeArgs = getBindings(bindBefore);
       const afterArgs = getBindings(bindAfter);
