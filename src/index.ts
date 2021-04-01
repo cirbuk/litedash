@@ -20,6 +20,15 @@ export function isUndefined<T>(val: T | undefined): val is undefined {
 }
 
 /**
+ * Checks if the passed value is null or undefined
+ * @param val
+ * @returns true if val is null or undefined, false otherwise
+ */
+export function isNullOrUndefined<T>(val: T | null | undefined): val is null | undefined {
+  return isUndefined(val) || isNull(val);
+}
+
+/**
  * Checks if the passed value is a function
  * @param val
  * @returns true if val is a function, false otherwise
