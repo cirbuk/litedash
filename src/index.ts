@@ -27,14 +27,18 @@ export const isFunction = (val: unknown): boolean => typeof val === "function";
  * @param val
  * @returns true if val is a string, false otherwise
  */
-export const isString = (val: unknown): boolean => typeof val === "string";
+export function isString<T>(val: T | string): val is string {
+  return typeof val === "string";
+}
 
 /**
  * Checks if the passed value is a non-empty string(length > 0)
  * @param val
  * @returns true if val is a non-empty string, false otherwise
  */
-export const isValidString = (val: unknown): boolean => isString(val) && (val as string).length > 0;
+export const isValidString = (val: unknown): boolean => {
+  return isString(val) && val.length > 0;
+};
 
 /**
  * Checks if value is object-like. A value is object-like if it's not null and has a typeof result of "object".
@@ -367,7 +371,7 @@ export const getAsNumbers = (object: AnyObject, paths: string | string[] = [], d
     return +(value as number);
   };
   if (isString(paths)) {
-    return getValue(paths as string);
+    return getValue(paths);
   }
   if (Array.isArray(paths)) {
     return paths.map(getValue);
