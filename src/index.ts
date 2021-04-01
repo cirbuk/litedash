@@ -103,12 +103,12 @@ export const get = (object: Record<string, unknown>, path: string | string[] = "
     if (!Array.isArray(path)) {
       parsedPath = path.split(".");
     }
-    while (!isUndefined(result) && !isNull(result) && parsedPath.length > 0) {
+    while (!isNullOrUndefined(result) && parsedPath.length > 0) {
       // @ts-ignore
       result = result[parsedPath.shift()];
     }
   }
-  return !isUndefined(result) && !isNull(result) ? result : defaultValue;
+  return !isNullOrUndefined(result) ? result : defaultValue;
 };
 
 /**
@@ -127,7 +127,7 @@ export const set = (object: Record<string, unknown>, path = "", value: unknown, 
   let objectPointer: Record<string, unknown> = object;
   splits.slice(0, splits.length - 1).forEach((spilt) => {
     let currentObject = objectPointer[spilt];
-    if (isUndefined(currentObject) || isNull(currentObject)) {
+    if (isNullOrUndefined(currentObject)) {
       if (!create) {
         throw new Error("Path provided does not exist");
       } else {
@@ -255,7 +255,7 @@ export const mapValues = (obj: AnyObject, func: (value: unknown, key: string) =>
  * @param str
  * @returns Capitalized string
  */
-export const capitalize = (str: string): string => (isUndefined(str) || isNull(str) ? "" : `${(str[0] || "").toUpperCase()}${str.slice(1)}`);
+export const capitalize = (str: string): string => (isNullOrUndefined(str) ? "" : `${(str[0] || "").toUpperCase()}${str.slice(1)}`);
 
 /**
  * Get a number hash of the string passed
