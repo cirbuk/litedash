@@ -6,14 +6,27 @@ type AnyObject = { [index: string]: unknown };
  * @param val
  * @returns true if val is null, false otherwise
  */
-export const isNull = (val: unknown): boolean => val === null;
+export function isNull<T>(val: T | null): val is null {
+  return val === null;
+}
 
 /**
  * Checks if the passed value is undefined
  * @param val
  * @returns true if val is undefined, false otherwise
  */
-export const isUndefined = (val: unknown): boolean => typeof val === "undefined";
+export function isUndefined<T>(val: T | undefined): val is undefined {
+  return typeof val === "undefined";
+}
+
+/**
+ * Checks if the passed value is null or undefined
+ * @param val
+ * @returns true if val is null or undefined, false otherwise
+ */
+export function isNullOrUndefined<T>(val: T | null | undefined): val is null | undefined {
+  return isUndefined(val) || isNull(val);
+}
 
 /**
  * Checks if the passed value is a function
@@ -27,21 +40,25 @@ export const isFunction = (val: unknown): boolean => typeof val === "function";
  * @param val
  * @returns true if val is a string, false otherwise
  */
-export const isString = (val: unknown): boolean => typeof val === "string";
+export function isString<T>(val: T | string): val is string {
+  return typeof val === "string";
+}
 
 /**
  * Checks if the passed value is a non-empty string(length > 0)
  * @param val
  * @returns true if val is a non-empty string, false otherwise
  */
-export const isValidString = (val: unknown): boolean => isString(val) && (val as string).length > 0;
+export const isValidString = (val: unknown): boolean => {
+  return isString(val) && val.length > 0;
+};
 
 /**
  * Checks if value is object-like. A value is object-like if it's not null and has a typeof result of "object".
  * @param val
  * @returns true if val is non-null of type object, false otherwise
  */
-export const isObjectLike = (val: unknown): boolean => typeof val === "object" && val !== null;
+export const isObjectLike = (val: unknown): boolean => typeof val === "object" && !isNull(val);
 
 /**
  * Checks if value is the language type of Object. (e.g. arrays, functions, objects, regexes, new Number(0), and new String(''))
@@ -49,8 +66,7 @@ export const isObjectLike = (val: unknown): boolean => typeof val === "object" &
  * @returns true if val is non-null of type object or function, false otherwise
  */
 export const isObject = (val: unknown): boolean => {
-  const type = typeof val;
-  return val !== null && (type === "object" || isFunction(val));
+  return !isNull(val) && (typeof val === "object" || isFunction(val));
 };
 
 /**
@@ -86,12 +102,12 @@ export const get = (object: Record<string, unknown>, path: string | string[] = "
     if (!Array.isArray(path)) {
       parsedPath = path.split(".");
     }
-    while (!isUndefined(result) && !isNull(result) && parsedPath.length > 0) {
+    while (!isNullOrUndefined(result) && parsedPath.length > 0) {
       // @ts-ignore
       result = result[parsedPath.shift()];
     }
   }
-  return !isUndefined(result) && !isNull(result) ? result : defaultValue;
+  return !isNullOrUndefined(result) ? result : defaultValue;
 };
 
 /**
@@ -110,7 +126,7 @@ export const set = (object: Record<string, unknown>, path = "", value: unknown, 
   let objectPointer: Record<string, unknown> = object;
   splits.slice(0, splits.length - 1).forEach((spilt) => {
     let currentObject = objectPointer[spilt];
-    if (isUndefined(currentObject) || isNull(currentObject)) {
+    if (isNullOrUndefined(currentObject)) {
       if (!create) {
         throw new Error("Path provided does not exist");
       } else {
@@ -238,7 +254,7 @@ export const mapValues = (obj: AnyObject, func: (value: unknown, key: string) =>
  * @param str
  * @returns Capitalized string
  */
-export const capitalize = (str: string): string => (isUndefined(str) || isNull(str) ? "" : `${(str[0] || "").toUpperCase()}${str.slice(1)}`);
+export const capitalize = (str: string): string => (isNullOrUndefined(str) ? "" : `${(str[0] || "").toUpperCase()}${str.slice(1)}`);
 
 /**
  * Get a number hash of the string passed
@@ -277,13 +293,14 @@ const getBindings = (bindings: unknown[] = []) =>
  * @returns object with bound functions
  */
 export const bindFunctions = (funcs: { [index: string]: AnyFunction }, bindBefore: unknown[], bindAfter: unknown[]): { [index: string]: AnyFunction } => {
-  let keys;
+  let keys: string[];
   try {
     keys = Object.keys(funcs);
   } catch (ex) {
     throw new Error("Unable to extract keys from provided object");
   }
-  return keys.reduce((acc: AnyObject, key: string) => {
+
+  return keys.reduce<{ [index: string]: AnyFunction }>((acc, key) => {
     acc[key] = (...args: unknown[]) => {
       const beforeArgs = getBindings(bindBefore);
       const afterArgs = getBindings(bindAfter);
@@ -367,7 +384,7 @@ export const getAsNumbers = (object: AnyObject, paths: string | string[] = [], d
     return +(value as number);
   };
   if (isString(paths)) {
-    return getValue(paths as string);
+    return getValue(paths);
   }
   if (Array.isArray(paths)) {
     return paths.map(getValue);

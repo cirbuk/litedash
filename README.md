@@ -20,6 +20,7 @@ import {isUndefined, get, mapValues} from "litedash";
 
 * `isNull(val)`: returns `true` if val is `null`
 * `isUndefined(val)`: returns `true` if val is `undefined`
+* `isNullOrUndefined(val)`: returns `true` if val is `null` or `undefined`
 * `isFunction(val)`: returns `true` if val is a function
 * `isString(val)`: returns `true` if val is a string
 * `isValidString(val)`: returns `true` if val is a non-empty string
